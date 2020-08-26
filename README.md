@@ -1,2 +1,3 @@
-# docker-for-php-fpm-app
-images for php application with needing extensions
+# docker for php-fpm application
+
+Images for php application with needing extensions
