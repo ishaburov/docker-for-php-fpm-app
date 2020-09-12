@@ -8,7 +8,7 @@
 ## Instruction
 
 You can use image from docker hub <br>
-https://hub.docker.com/repository/docker/ishaburov/php-fpm-alpine<br><br>
+https://hub.docker.com/repository/docker/ishaburov/php-fpm<br><br>
 
 Or copy dockerfile and build it making this command:<br><br>
 docker build -f ./<b>PATH_TO_FILE</b>/php:7.4.9-fpm-alpine.dockerfile . <br><br>
