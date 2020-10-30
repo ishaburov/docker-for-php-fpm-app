@@ -1,21 +1,17 @@
-FROM php:7.4.9-fpm-alpine
+FROM php:7.4.9-fpm
 
-RUN apk update && apk add \
- alpine-sdk \
+RUN apt-get update && apt-get install -y \
  zip \
  ffmpeg \
  curl \
  libmcrypt-dev \
- mysql-client \
+ libpng-dev \
  imagemagick \
  exiftool \
- freetype \
- libpng \
- libjpeg-turbo \
- freetype-dev \
- libpng-dev \
- libjpeg-turbo-dev \
- libzip-dev zlib-dev \
+ supervisor \
+ libfreetype6-dev \
+ libjpeg62-turbo-dev \
+ libzip-dev \
  && docker-php-ext-configure bcmath \
  && docker-php-ext-configure exif \
  && docker-php-ext-install zip \
@@ -29,17 +25,14 @@ RUN apk update && apk add \
  && docker-php-ext-configure gd --with-freetype --with-jpeg \
  && NPROC=$(grep -c ^processor /proc/cpuinfo 2>/dev/null || 1) \
  && docker-php-ext-install -j${NPROC} gd \
- && apk del --no-cache freetype-dev libpng-dev libjpeg-turbo-dev \
- && apk --no-cache add procps
+ && mkdir /home/supervisord
 
-RUN set -ex \
-    && apk add --no-cache --virtual .phpize-deps $PHPIZE_DEPS imagemagick-dev libtool \
-    && export CFLAGS="$PHP_CFLAGS" CPPFLAGS="$PHP_CPPFLAGS" LDFLAGS="$PHP_LDFLAGS" \
-    && pecl install imagick-3.4.3 \
-    && docker-php-ext-enable imagick \
-    && apk add --no-cache --virtual .imagick-runtime-deps imagemagick \
-    && apk del .phpize-deps
 
+# Install imagick
+RUN apt-get update && apt-get install -y \
+    libmagickwand-dev --no-install-recommends \
+    && pecl install imagick \
+	&& docker-php-ext-enable imagick
+
+# Install composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-
-WORKDIR /var/www/
