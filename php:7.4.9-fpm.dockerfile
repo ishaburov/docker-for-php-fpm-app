@@ -1,14 +1,13 @@
-FROM php:7.4.9-fpm
+FROM php:7.4.12-fpm
 
 RUN apt-get update && apt-get install -y \
  zip \
- ffmpeg \
+ cron \
  curl \
  libmcrypt-dev \
  libpng-dev \
  imagemagick \
  exiftool \
- supervisor \
  libfreetype6-dev \
  libjpeg62-turbo-dev \
  libzip-dev \
@@ -24,9 +23,7 @@ RUN apt-get update && apt-get install -y \
  && docker-php-ext-install opcache \
  && docker-php-ext-configure gd --with-freetype --with-jpeg \
  && NPROC=$(grep -c ^processor /proc/cpuinfo 2>/dev/null || 1) \
- && docker-php-ext-install -j${NPROC} gd \
- && mkdir /home/supervisord
-
+ && docker-php-ext-install -j${NPROC} gd
 
 # Install imagick
 RUN apt-get update && apt-get install -y \
@@ -36,3 +33,5 @@ RUN apt-get update && apt-get install -y \
 
 # Install composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+
